@@ -1,0 +1,35 @@
+{
+  "name": "axelmedia/db",
+  "type": "library",
+  "description" : "PDO wrapper",
+  "license": "MIT",
+  "homepage": "http://axel-media.com",
+  "authors": [
+    {
+      "name" : "Ken Koizumi",
+      "email" : "koizumi@axel-media.com",
+      "homepage" : "https://github.com/ken-koizumi"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/axelmedia/db/issues"
+  },
+  "require": {
+    "php" : ">=5.3",
+    "ext-pdo" : "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit" : "^4.0",
+    "fabpot/php-cs-fixer": "^1.11"
+  },
+  "autoload": {
+    "psr-4": {
+      "Axelmedia\\Db\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Axelmedia\\Db\\Test\\": "test"
+    }
+  }
+}
