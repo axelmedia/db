@@ -27,7 +27,7 @@ class Statement extends \PDOStatement
     /**
      * Create new PDOStatement object
      *
-     * @param string  $history  Pass History object
+     * @param string $history Pass History object
      */
     protected function __construct($history = null)
     {
@@ -41,11 +41,11 @@ class Statement extends \PDOStatement
      *
      * Buffering bind datas
      *
-     * @param string  $param  Parameter identifier
-     * @param string  $value  Variable to bind to the SQL statement parameter
-     * @param string  $type  Explicit data type for the parameter using the PDO::PARAM_* constants
-     * @param string  $length  Length of the data type
-     * @param string  $options  Driver options
+     * @param string $param   Parameter identifier
+     * @param string $value   Variable to bind to the SQL statement parameter
+     * @param string $type    Explicit data type for the parameter using the PDO::PARAM_* constants
+     * @param string $length  Length of the data type
+     * @param string $options Driver options
      */
     public function bindParam($param, &$value, $type = \PDO::PARAM_STR, $length = null, $options = null)
     {
@@ -58,9 +58,9 @@ class Statement extends \PDOStatement
      *
      * Buffering bind datas
      *
-     * @param string  $param  Parameter identifier
-     * @param string  $value  Variable to bind to the SQL statement parameter
-     * @param string  $type  Explicit data type for the parameter using the PDO::PARAM_* constants
+     * @param string $param Parameter identifier
+     * @param string $value Variable to bind to the SQL statement parameter
+     * @param string $type  Explicit data type for the parameter using the PDO::PARAM_* constants
      */
     public function bindValue($param, $value, $type = \PDO::PARAM_STR)
     {
@@ -71,10 +71,10 @@ class Statement extends \PDOStatement
     /**
      * PDOStatement execute() extend history and callback
      *
-     * @param array  $values  Variable to bind to the SQL statement parameter
-     * @param callable  $callback  callback function binded PDO object
-     * @param bool  $noLog  If true, History not add
-     * @return object  PDOStatement object
+     * @param  array    $values   Variable to bind to the SQL statement parameter
+     * @param  callable $callback callback function binded PDO object
+     * @param  bool     $noLog    If true, History not add
+     * @return object   PDOStatement object
      */
     public function execute($values = array(), $callback = null, $noLog = false)
     {

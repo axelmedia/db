@@ -24,9 +24,9 @@ class Flow
 
     public function sql($sql)
     {
-        if(empty($sql)) {
+        if (empty($sql)) {
             throw new \Exception('SQL sentence is Required.');
-        } elseif(!is_string($sql)) {
+        } elseif (!is_string($sql)) {
             throw new \TypeError('Argument must be of the type string, '.gettype($sql).' given, called');
         }
 
@@ -38,7 +38,7 @@ class Flow
     {
         if (is_array($binds)) {
             $this->binds = $binds;
-        } elseif(isset($binds)) {
+        } elseif (isset($binds)) {
             $this->binds = func_get_args();
         }
 
@@ -126,21 +126,21 @@ class Flow
                 }
 
                 if (is_array($results)) {
-                    foreach($results as $val) {
+                    foreach ($results as $val) {
                         if (is_string($val)) {
                             $this->errors[] = new \Exception($val);
-                        } elseif($val instanceof \Exception) {
+                        } elseif ($val instanceof \Exception) {
                             $this->errors[] = $val;
                         }
                     }
                 } elseif (is_string($results)) {
                     $errors[] = new \Exception($results);
-                } elseif($results instanceof \Exception) {
+                } elseif ($results instanceof \Exception) {
                     $errors[] = $results;
                 }
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->errors[] = $e;
-            } catch(\TypeError $e) {
+            } catch (\TypeError $e) {
                 $this->errors[] = $e;
             }
         }
@@ -183,7 +183,7 @@ class Flow
                     }
                 }
                 return true;
-            } catch(\PDOException $e) {
+            } catch (\PDOException $e) {
                 $this->errors[] = $e;
                 if (!empty($this->callbacks['error'])) {
                     $this->callbacks['error']($this->errors);
@@ -199,7 +199,7 @@ class Flow
                     $callback();
                 }
                 return true;
-            } catch(\PDOException $e) {
+            } catch (\PDOException $e) {
                 $this->errors[] = $e;
                 if (!empty($this->callbacks['error'])) {
                     $this->callbacks['error']($this->errors);

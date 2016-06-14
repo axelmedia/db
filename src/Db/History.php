@@ -10,7 +10,7 @@ class History
     {
         $this->history[] = array(
             'sql' => $sql,
-            'binds' => (!empty($binds) ? $binds : null)
+            'binds' => (!empty($binds) ? $binds : null),
         );
 
         if (($count = count($this->history)) > $this->historyMax) {

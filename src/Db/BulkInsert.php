@@ -28,14 +28,13 @@ class BulkInsert
 
         try {
             $columns = array();
-            $sql = "SHOW FULL COLUMNS FROM ".$table.";";
+            $sql = 'SHOW FULL COLUMNS FROM '.$table.';';
             $query = $this->conn->query($sql);
-            while($res = $query->fetch(\PDO::FETCH_ASSOC)) {
+            while ($res = $query->fetch(\PDO::FETCH_ASSOC)) {
                 $columns[$res['Field']] = $res['Field'];
             }
             $this->columns = $columns;
-        } catch(\PDOException $e) {
-
+        } catch (\PDOException $e) {
         }
 
         $max = $this->conn->query("SHOW VARIABLES LIKE 'max_allowed_packet';")->fetch();
@@ -53,7 +52,7 @@ class BulkInsert
         $arr = null;
         if (is_array($args[0])) {
             $arr = $args[0];
-        } elseif(is_string($args[0])) {
+        } elseif (is_string($args[0])) {
             $arr = $args;
         }
 
@@ -62,19 +61,19 @@ class BulkInsert
         }
 
         $updates = array();
-        foreach($arr as $val) {
+        foreach ($arr as $val) {
             if (!empty($this->columns[$val])) {
                 $updates[$val] = "`{$val}`=VALUES(`$val`)";
             }
         }
 
-        $this->updates = implode(",".PHP_EOL, $updates);
+        $this->updates = implode(','.PHP_EOL, $updates);
     }
 
     public function setData($data)
     {
         $arr = array();
-        foreach($data as $key => $val) {
+        foreach ($data as $key => $val) {
             if (!empty($this->columns[$key]) && is_scalar($val)) {
                 $this->keys[$key] = $key;
                 $arr[$key] = $val;
@@ -96,21 +95,21 @@ class BulkInsert
             return;
         }
 
-        $value = "(".implode(",", array_fill(0, count($this->keys), "?")).")";
-        $values = implode(",".PHP_EOL, array_fill(0, count($this->stack), $value));
+        $value = '('.implode(',', array_fill(0, count($this->keys), '?')).')';
+        $values = implode(','.PHP_EOL, array_fill(0, count($this->stack), $value));
 
-        $sql  = "INSERT ".($this->ignore ? "IGNORE" : "INTO")." `{$this->table}`".PHP_EOL;
-        $sql .= "(`".implode("`,`", $this->keys)."`)".PHP_EOL;
+        $sql  = 'INSERT '.($this->ignore ? 'IGNORE' : 'INTO')." `{$this->table}`".PHP_EOL;
+        $sql .= '(`'.implode('`,`', $this->keys).'`)'.PHP_EOL;
         $sql .= "VALUES {$values}".PHP_EOL;
         if (!empty($this->updates)) {
-            $sql .= "ON DUPLICATE KEY UPDATE".PHP_EOL."{$this->updates}".PHP_EOL;
+            $sql .= 'ON DUPLICATE KEY UPDATE'.PHP_EOL."{$this->updates}".PHP_EOL;
         }
-        $sql = trim($sql).";";
+        $sql = trim($sql).';';
         $this->last_query = $sql;
 
         $binds = array();
-        foreach($this->stack as $data) {
-            foreach($this->keys as $val) {
+        foreach ($this->stack as $data) {
+            foreach ($this->keys as $val) {
                 if (array_key_exists($val, $data)) {
                     $binds[] = $data[$val];
                 } else {
@@ -128,7 +127,7 @@ class BulkInsert
             } else {
                 $this->conn->rollback();
             }
-        } catch(\PDOException $e) {
+        } catch (\PDOException $e) {
             $this->conn->rollback();
             throw $e;
         }

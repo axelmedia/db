@@ -12,14 +12,15 @@ class Config implements \ArrayAccess
         'name' => null,
         'port' => null,
         'path' => null,
-        'charset' => null
+        'charset' => null,
     );
 
-    public function __construct($dsn, $username = null, $password = null) {
+    public function __construct($dsn, $username = null, $password = null)
+    {
         if (!empty($dsn)) {
             if (is_string($dsn)) {
                 $this->parseDSN($dsn);
-            } elseif(is_array($dsn)) {
+            } elseif (is_array($dsn)) {
                 $this->parseConfig($dsn);
             }
 
@@ -82,7 +83,7 @@ class Config implements \ArrayAccess
             $this->container['scheme'] = $scheme;
 
             if (preg_match_all('/(\w+)=(\w+)/', $dsn, $m)) {
-                foreach($m[1] as $key => $name) {
+                foreach ($m[1] as $key => $name) {
                     $value = $m[2][$key];
                     if ('host' == $name) {
                         $this->container['host'] = $value;
@@ -114,20 +115,20 @@ class Config implements \ArrayAccess
 
     private function parseConfig($config)
     {
-        foreach($config as $key => $val) {
+        foreach ($config as $key => $val) {
             if (!is_string($val) && !is_int($val)) {
                 continue;
             }
 
             if (array_key_exists($key, $this->container)) {
                 $this->container[$key] = $val;
-            } elseif('hostname' == $key || 'host_name' == $key) {
+            } elseif ('hostname' == $key || 'host_name' == $key) {
                 $this->container['host'] = $config[$key];
-            } elseif('database' == $key || 'dbname' == $key || 'db_name' == $key) {
+            } elseif ('database' == $key || 'dbname' == $key || 'db_name' == $key) {
                 $this->container['name'] = $config[$key];
-            } elseif('username' == $key || 'user_name' == $key) {
+            } elseif ('username' == $key || 'user_name' == $key) {
                 $this->container['user'] = $config[$key];
-            } elseif('password' == $key) {
+            } elseif ('password' == $key) {
                 $this->container['pass'] = $config[$key];
             }
         }
@@ -147,7 +148,7 @@ class Config implements \ArrayAccess
     {
         if (array_key_exists($offset, $this->container)) {
             $this->container[$offset] = $value;
-        } elseif(!empty($offset)) {
+        } elseif (!empty($offset)) {
             $offset = str_replace(array(
                 '_',
                 'dbname',

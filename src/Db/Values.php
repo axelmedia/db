@@ -1,15 +1,15 @@
 <?php
 namespace Axelmedia\Db;
 
-class Values extends \ArrayObject implements \JsonSerializable {
+class Values extends \ArrayObject implements \JsonSerializable
+{
     public function __construct(
         $input = null,
         $flags = self::ARRAY_AS_PROPS,
         $iterator_class = 'ArrayIterator'
-    )
-    {
+    ) {
         if (is_array($input)) {
-            foreach($input as $key => $val) {
+            foreach ($input as $key => $val) {
                 $this->__set($key, $val);
             }
         }
@@ -51,7 +51,7 @@ class Values extends \ArrayObject implements \JsonSerializable {
     public function __toString()
     {
         $items = array();
-        foreach($this as $val) {
+        foreach ($this as $val) {
             if (!is_array($val) && !is_object($val)) {
                 $items[] = $val;
             }
@@ -62,7 +62,8 @@ class Values extends \ArrayObject implements \JsonSerializable {
         }
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return $this;
     }
 }

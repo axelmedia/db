@@ -31,5 +31,10 @@
     "psr-4": {
       "Axelmedia\\Db\\Test\\": "test"
     }
+  },
+  "scripts": {
+    "test": "phpunit --coverage-text; php-cs-fixer fix -v --diff --dry-run;",
+    "phpunit": "phpunit --coverage-text",
+    "phpcs": "php-cs-fixer fix -v --diff --dry-run;"
   }
 }

@@ -54,10 +54,10 @@ class Db
     /**
      * Create new object
      *
-     * @param string|array  $dsn  Data Source Name or database config array
-     * @param string  $username  Database Username
-     * @param string  $password  Database Password
-     * @param string  $options  PDO driver option
+     * @param  string|array $dsn      Data Source Name or database config array
+     * @param  string       $username Database Username
+     * @param  string       $password Database Password
+     * @param  string       $options  PDO driver option
      * @throws PDOException when Database connect failed
      */
     public function __construct($dsn, $username = null, $password = null, $options = null)
@@ -75,14 +75,14 @@ class Db
 
         $this->conn->setAttribute(\PDO::ATTR_STATEMENT_CLASS, array(
             __NAMESPACE__.'\\DB\\Statement',
-            array($this->history)
+            array($this->history),
         ));
     }
 
     /**
      * Config getter
      *
-     * @param string  $key  Config array key
+     * @param  string $key Config array key
      * @return mixed  If pass $key return one, else all config data
      */
     public function getConfig($key = null)
@@ -99,7 +99,7 @@ class Db
     /**
      * Connection getter
      *
-     * @return object  DB Connection object
+     * @return object DB Connection object
      */
     public function getConnection()
     {
@@ -109,19 +109,19 @@ class Db
     /**
      * Current DB Name getter
      *
-     * @return string  DB Name
+     * @return string DB Name
      */
     public function getCurrentDb()
     {
         if ($conn = $this->getConnection()) {
-            return $conn->query("SELECT DATABASE()")->fetchColumn();
+            return $conn->query('SELECT DATABASE()')->fetchColumn();
         }
     }
 
     /**
      * Get Query history
      *
-     * @return array  SQL sentense and Binded data in array
+     * @return array SQL sentense and Binded data in array
      */
     public function getHistory()
     {
@@ -131,8 +131,8 @@ class Db
     /**
      * Get Database Table info object
      *
-     * @param string  $name  Table Name
-     * @return object  Table data object
+     * @param  string $name Table Name
+     * @return object Table data object
      */
     public function getTable($name)
     {
@@ -151,7 +151,7 @@ class Db
     /**
      * Get Table's Columns info object (shortcut)
      *
-     * @param string  $name  Table Name
+     * @param  string $name Table Name
      * @return array  Table's Columns info array
      */
     public function getColumns($name)
@@ -164,8 +164,8 @@ class Db
      *
      * Starting Flow object
      *
-     * @param string  $sql  SQL sentence
-     * @return object  DB/Flow object
+     * @param  string $sql SQL sentence
+     * @return object DB/Flow object
      */
     public function sql($sql)
     {
@@ -178,8 +178,8 @@ class Db
      *
      * Starting BulkInsert object
      *
-     * @param string  $table  Table Name
-     * @return object  DB/BulkInsert object
+     * @param  string $table Table Name
+     * @return object DB/BulkInsert object
      */
     public function bulkInsert($table)
     {
@@ -207,14 +207,14 @@ class Db
      *
      * Use singleton object at self
      *
-     * @param string $dbname  Switch Database
+     * @param  string   $dbname Switch Database
      * @return resource
      */
     public static function getInstance($dbname = null)
     {
         if (null === self::$instance) {
             throw new \Exception('Instance not created.');
-        } elseif(!empty($dbname)) {
+        } elseif (!empty($dbname)) {
             if (is_string($dbname) && preg_match('/\A[a-zA-Z0-9_]+\z/i', $dbname)) {
                 self::$instance->exec("USE `{$args[0]}`;");
             }
@@ -268,9 +268,9 @@ class Db
     /**
      * Pass method to PDO object
      *
-     * @param string  $method  PDO method name
-     * @param array  $args  PDO method arguments
-     * @return object  PDO method results
+     * @param  string $method PDO method name
+     * @param  array  $args   PDO method arguments
+     * @return object PDO method results
      */
     public function __call($method, $args)
     {
@@ -279,7 +279,7 @@ class Db
                 $this->conn->exec("USE `{$args[0]}`;");
                 return $this;
             } else {
-                throw new \PDOException("Invalid Database name");
+                throw new \PDOException('Invalid Database name');
             }
         } elseif (!method_exists($this->conn, $method)) {
             throw new \PDOException(sprintf("Call to undefined method '%s'", $method));
@@ -288,22 +288,22 @@ class Db
         $len = count($args);
         if (0 === $len) {
             return $this->conn->$method();
-        } elseif(1 === $len) {
+        } elseif (1 === $len) {
             return $this->conn->$method($args[0]);
-        } elseif(2 === $len) {
+        } elseif (2 === $len) {
             return $this->conn->$method($args[0], $args[1]);
-        } elseif(3 === $len) {
+        } elseif (3 === $len) {
             return $this->conn->$method($args[0], $args[1], $args[2]);
-        } elseif(4 === $len) {
+        } elseif (4 === $len) {
             return $this->conn->$method($args[0], $args[1], $args[2], $args[3]);
-        } elseif(5 === $len) {
+        } elseif (5 === $len) {
             return $this->conn->$method($args[0], $args[1], $args[2], $args[3], $args[4]);
         } else {
             return call_user_func_array(array($this->conn, $method), $args);
         }
     }
 
-    /**
+    /*
      * var_dump checker for Developer
      *
      * @return object  PDO object

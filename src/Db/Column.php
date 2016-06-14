@@ -13,7 +13,7 @@ class Column implements \ArrayAccess, \IteratorAggregate
 
     public function __construct($table, $raw)
     {
-        if(!($table instanceof \Axelmedia\DB\Table)) {
+        if (!($table instanceof \Axelmedia\DB\Table)) {
             throw new \Exception('Table is not object.');
         }
 
@@ -365,7 +365,8 @@ class Column implements \ArrayAccess, \IteratorAggregate
         }
     }
 
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         if (!is_string($offset)) {
             throw new \TypeError('Argument must be of the type string, '.gettype($offset).' given, called');
         }
@@ -373,7 +374,8 @@ class Column implements \ArrayAccess, \IteratorAggregate
         $this->data[$offset] = $value;
     }
 
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         if (!is_string($offset)) {
             throw new \TypeError('Argument must be of the type string, '.gettype($offset).' given, called');
         }
@@ -381,7 +383,7 @@ class Column implements \ArrayAccess, \IteratorAggregate
         unset($this->data[$offset]);
     }
 
-    function getIterator()
+    public function getIterator()
     {
         return new \ArrayIterator($this->data);
     }

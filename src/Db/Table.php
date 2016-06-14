@@ -19,7 +19,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
     {
         if (!($db instanceof \Axelmedia\DB)) {
             throw new \Exception('Argument must be instance of DB.');
-        } elseif(!is_string($name)) {
+        } elseif (!is_string($name)) {
             throw new \Exception('Argument must be of the type string, '.gettype($name).' given, called.');
         }
 
@@ -27,8 +27,8 @@ class Table implements \ArrayAccess, \IteratorAggregate
         $this->conn = $db->getConnection();
         $config = $db->getConfig();
 
-        $dbName = $this->conn->query("SELECT DATABASE()")->fetchColumn();
-        $tableName = str_replace(array("'", "`"), '', $name);
+        $dbName = $this->conn->query('SELECT DATABASE()')->fetchColumn();
+        $tableName = str_replace(array("'", '`'), '', $name);
         $tableName = explode('.', $tableName);
         if (!empty($tableName[1])) {
             $dbName = $tableName[0];
@@ -39,12 +39,12 @@ class Table implements \ArrayAccess, \IteratorAggregate
 
         $this->name = $tableName;
         $this->fullName  = $dbName.$tableName;
-        $this->queryName  = "`".trim($this->conn->quote($dbName), "'")."`.";
-        $this->queryName .= "`".trim($this->conn->quote($tableName), "'")."`";
+        $this->queryName  = '`'.trim($this->conn->quote($dbName), "'").'`.';
+        $this->queryName .= '`'.trim($this->conn->quote($tableName), "'").'`';
 
         try {
-            $sql  = "SHOW TABLE STATUS FROM ";
-            $sql .= "`".trim($this->conn->quote($dbName), "'")."` LIKE ?;";
+            $sql  = 'SHOW TABLE STATUS FROM ';
+            $sql .= '`'.trim($this->conn->quote($dbName), "'").'` LIKE ?;';
             $stmt = $this->conn->prepare($sql);
             if ($stmt->execute(array($this->name), null, true)) {
                 $raw = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -55,7 +55,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
                 $this->raw = $raw;
 
                 $data = array();
-                foreach($raw as $key => $val) {
+                foreach ($raw as $key => $val) {
                     $lower = strtolower($key);
                     $data[$lower] = $val;
 
@@ -64,14 +64,14 @@ class Table implements \ArrayAccess, \IteratorAggregate
                     }
                 }
 
-                foreach(array(
+                foreach (array(
                     'rows',
                     'avg_row_length',
                     'data_length',
                     'max_data_length',
                     'index_length',
                     'data_free',
-                    'auto_increment'
+                    'auto_increment',
                 ) as $val) {
                     if (array_key_exists($val, $data)) {
                         $data[$val] = (int)$data[$val];
@@ -92,14 +92,14 @@ class Table implements \ArrayAccess, \IteratorAggregate
                 $this->data = $data;
 
 
-                $sql  = "SHOW FULL COLUMNS FROM ".$this->queryName.";";
+                $sql  = 'SHOW FULL COLUMNS FROM '.$this->queryName.';';
                 if ($query = $this->conn->query($sql, null, true)) {
                     if (!$query->rowCount()) {
                         throw new \Exception(sprintf('Table "%s" has no columns.', $tableName));
                     }
 
                     $requires = $primaries = $indicies = array();
-                    while($val = $query->fetch(\PDO::FETCH_ASSOC)) {
+                    while ($val = $query->fetch(\PDO::FETCH_ASSOC)) {
                         $column = new \Axelmedia\DB\Column($this, $val);
                         $this->columns[$column['name']] = $column;
 
@@ -121,7 +121,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
                     $this->offsetSet('index', $indicies);
                 }
             }
-        } catch(\PDOException $e) {
+        } catch (\PDOException $e) {
             throw $e;
         }
     }
@@ -175,8 +175,8 @@ class Table implements \ArrayAccess, \IteratorAggregate
         $num = func_num_args();
         if (2 == $num && is_string($args[0]) && !empty($this->columns[$args[0]])) {
             $this->columns[$args[0]]->setValue($args[1]);
-        } elseif(is_array($values)) {
-            foreach($values as $column => $val) {
+        } elseif (is_array($values)) {
+            foreach ($values as $column => $val) {
                 if (!empty($this->columns[$column])) {
                     $this->columns[$column]->setValue($val);
                 }
@@ -194,7 +194,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
             }
         } else {
             $values = array();
-            foreach($this->columns as $column) {
+            foreach ($this->columns as $column) {
                 if (!$column->hasValue()) {
                     continue;
                 }
@@ -207,7 +207,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
 
     public function clearValues()
     {
-        foreach($this->columns as $key => $column) {
+        foreach ($this->columns as $key => $column) {
             $this->columns[$key]->removeValue();
         }
 
@@ -216,7 +216,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
 
     public function clearAll()
     {
-        foreach($this->columns as $key => $column) {
+        foreach ($this->columns as $key => $column) {
             $this->columns[$key]->removeValue()->removeFormatter()->removeValidator();
         }
 
@@ -229,8 +229,8 @@ class Table implements \ArrayAccess, \IteratorAggregate
         $num = func_num_args();
         if (2 == $num && is_string($args[0]) && !empty($this->columns[$args[0]])) {
             $this->columns[$args[0]]->setFormatter($args[1]);
-        } elseif(is_array($values)) {
-            foreach($values as $column => $val) {
+        } elseif (is_array($values)) {
+            foreach ($values as $column => $val) {
                 if (!empty($this->columns[$column])) {
                     $this->columns[$column]->setFormatter($val);
                 }
@@ -246,8 +246,8 @@ class Table implements \ArrayAccess, \IteratorAggregate
         $num = func_num_args();
         if (2 == $num && is_string($args[0]) && !empty($this->columns[$args[0]])) {
             $this->columns[$args[0]]->setValidator($args[1]);
-        } elseif(is_array($values)) {
-            foreach($values as $column => $val) {
+        } elseif (is_array($values)) {
+            foreach ($values as $column => $val) {
                 if (!empty($this->columns[$column])) {
                     $this->columns[$column]->setValidator($val);
                 }
@@ -264,7 +264,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
         }
 
         $results = array();
-        foreach($this->columns as $column) {
+        foreach ($this->columns as $column) {
             if (!$column->hasValue() || !$column->hasValidator()) {
                 continue;
             }
@@ -277,7 +277,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
         }
     }
 
-    public Function getLastId()
+    public function getLastId()
     {
         if (!empty($this->lastId)) {
             return $this->lastId;
@@ -292,7 +292,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
             } else {
                 $this->setValues($values);
             }
-        } elseif(!($callback instanceof \Closure)) {
+        } elseif (!($callback instanceof \Closure)) {
             $callback = null;
         }
 
@@ -307,7 +307,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
                 $isUpdate = (!empty($values[$onlyPrimary]));
             } else {
                 $flag = true;
-                foreach($primaries as $key) {
+                foreach ($primaries as $key) {
                     if (empty($values[$key])) {
                         $flag = false;
                     }
@@ -317,13 +317,13 @@ class Table implements \ArrayAccess, \IteratorAggregate
         }
 
         $sql = array();
-        $sql[] = "INSERT INTO ".$this->getQueryName();
-        $sql[] = "(`".implode("`,`", array_keys($values))."`)";
-        $sql[] = "VALUES";
-        $sql[] = "(".implode(",", array_fill(0, count($values), '?')).")";
-        $sql[] = "ON DUPLICATE KEY UPDATE";
+        $sql[] = 'INSERT INTO '.$this->getQueryName();
+        $sql[] = '(`'.implode('`,`', array_keys($values)).'`)';
+        $sql[] = 'VALUES';
+        $sql[] = '('.implode(',', array_fill(0, count($values), '?')).')';
+        $sql[] = 'ON DUPLICATE KEY UPDATE';
         $updates = array();
-        foreach($values as $key => $val) {
+        foreach ($values as $key => $val) {
             if ($key != $onlyPrimary) {
                 $updates[] = "`{$key}`=VALUES(`{$key}`)";
             }
@@ -331,7 +331,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
         if (!empty($onlyPrimary)) {
             $updates[] = "`{$onlyPrimary}`=LAST_INSERT_ID(`{$onlyPrimary}`)";
         }
-        $sql = implode(PHP_EOL, $sql).PHP_EOL.implode(",".PHP_EOL, $updates).";";
+        $sql = implode(PHP_EOL, $sql).PHP_EOL.implode(','.PHP_EOL, $updates).';';
 
         try {
             $stmt = $this->conn->prepare($sql);
@@ -348,7 +348,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
 
                 return true;
             }
-        } catch(\PDOExeption $e) {
+        } catch (\PDOExeption $e) {
             throw $e;
         }
 
@@ -443,7 +443,7 @@ class Table implements \ArrayAccess, \IteratorAggregate
         return $this->setValidationResults($values);
     }
 
-    public function lastInsertId ()
+    public function lastInsertId()
     {
         return $this->getLastId();
     }
@@ -490,7 +490,8 @@ class Table implements \ArrayAccess, \IteratorAggregate
         }
     }
 
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         if (!is_string($offset)) {
             throw new \TypeError('Argument must be of the type string, '.gettype($offset).' given, called');
         }
@@ -498,7 +499,8 @@ class Table implements \ArrayAccess, \IteratorAggregate
         $this->data[$offset] = $value;
     }
 
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         if (!is_string($offset)) {
             throw new \Exception('Argument must be of the type string, '.gettype($offset).' given, called');
         }
